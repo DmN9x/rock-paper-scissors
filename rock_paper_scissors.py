@@ -14,7 +14,7 @@ skipText = False
 
 def main():
     
-    '''This is where you start and finis your journey'''
+    '''This is where you start and finish your journey'''
     os.system('cls')
     threadSkipText = threading.Thread(target=skipTexts, daemon=True)
     threadSkipText.start()
@@ -26,7 +26,7 @@ def main():
         "Let's start by getting your information. (press ENTER to continue)", True
         )
     
-    # Getting all the info we need to get acces to your twitter account and get access to your schedule (don't worry)
+    # Getting all the info we need to get access to your twitter account and get access to your schedule (don't worry)
     playerInfos = getPlayerInformations()
     
     # Introducing the player to the game
@@ -114,8 +114,8 @@ def getPlayerInformations():
     
     # Asking for the player's age
     printSlowly(osName + ": How old are you?\nIf you don't want to say it, just press ENTER\n")
-    playerInfos['Age'] = input()
-    if playerInfos['Age'] == '':
+    playerInfos['Age'] = input().strip()
+    if playerInfos['Age'] == '' or playerInfos['Age'] != int:
         printSlowly(
             "Okay, I see you don't want to tell me your age.\n"\
             "That's okay. But you just lost some point with me...\n"\
@@ -155,10 +155,12 @@ def printSlowly(string: str, clear = None):
             break
     
     if clear == True:
-        input()
+        input() # This input is here so the text doesn't disappear instantly after it's printed
         os.system('cls')
 
 def rpsSystem(difficulty, object, round):
+    
+    '''This is the brain of the game'''
     
     global lastPlay
     
@@ -171,10 +173,12 @@ def rpsSystem(difficulty, object, round):
     elif difficulty == 'master':  # (1-3)
         predictRange = [1, 4]
     
+    # If you're unlucky, you'll simply get counterplayed. But this only happens on lever hard and master
     if (difficulty == 'hard' or difficulty == 'master') and np.random.randint(predictRange[0], predictRange[1]) == np.random.randint(predictRange[0], predictRange[1]):
         counterPlay = counterPlaysDict[object]
     else:
         
+        # On level easy, the first round is random, but the rest of them are always the counter play of your last choice
         if difficulty == 'easy':
             if round == 1:
                 counterPlay = np.random.randint(1, 4)
@@ -182,14 +186,16 @@ def rpsSystem(difficulty, object, round):
             else:
                 counterPlay = counterPlaysDict[lastPlay]
                 lastPlay = object  # stores the last play by the player to use in the next round
-                
+        
+        # On medium, every 5 rounds you get the counter play of your last choice, but the rest is random
         elif difficulty == 'medium':
             if round % 5 == 0:
                 counterPlay = counterPlaysDict[lastPlay]
             else:
                 counterPlay = np.random.randint(1, 4)
                 lastPlay = object  # stores the last play by the player to use in the next round
-                
+        
+        # Here things start to get interesting, it'll be random every even round (and the first one as well), and counter for your last choice every odd round
         elif difficulty == 'hard':
             if round % 2 == 0 or round == 1:
                 counterPlay = np.random.randint(1, 4)
@@ -197,7 +203,11 @@ def rpsSystem(difficulty, object, round):
             else:
                 counterPlay = counterPlaysDict[lastPlay]
                 lastPlay = object  # stores the last play by the player to use in the next round
-                
+        
+        # This is complete bullshit to be honest, I've never made more than 2 rounds myself, it's almost impossible to win
+        # If you don't get straight up countered (33% chance every round), you still have 25% chance of getting a random play
+        # But if you don't get lucky, you'll either lose or draw.
+        # The logic behind this code doesn't let the machine lose. Good luck!
         elif difficulty == 'master':
             if np.random.randint(1, 5) == np.random.randint(1, 5):
                 counterPlay = np.random.randint(1, 4)
