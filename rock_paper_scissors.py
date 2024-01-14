@@ -34,13 +34,7 @@ def main():
         osName + ": Welcome, " + playerInfos['Name'] + ", and welcome to the Rock, Paper and Scissors game!\n"\
         "This game might sound easy, but it's not for amateurs.", True
         )
-    
-    # Explaining the rules of the game and how to play it
-    printSlowly(
-        assistantName + ": Alright buddy, don't let the game system scare you. It thinks it's better than everyone else...\n"\
-        "Don't worry, the game is pretty intuitive!", True
-        )
-            
+                
     # Loop if the player wants to play again
     while True:
         os.system("cls")
@@ -133,9 +127,6 @@ def getPlayerInformations():
         printSlowly(assistantName + ": " + playerInfos['Age'] + ", " + np.random.choice(phrasesAge), True)
         
     # Returning the info
-    
-    printSlowly(assistantName + ": I think that's all the information I need to help you.\nLet's start!", True)
-    
     return playerInfos
 
 def printSlowly(string: str, clear = None):
